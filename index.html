@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Soil Dashboard</title>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+  />
+  <style>
+    body { font-family: sans-serif; margin: 0; }
+    #controls { padding: 1em; background: #f7f7f7; }
+    #status { margin-top: 0.5em; color: #555; }
+    #dataTable { 
+      max-height: 200px; 
+      overflow: auto; 
+      margin: 1em; 
+      border: 1px solid #ccc;
+    }
+    #dataTable table { 
+      width: 100%; 
+      border-collapse: collapse; 
+    }
+    #dataTable th, #dataTable td {
+      border: 1px solid #ddd; 
+      padding: 4px; 
+      font-size: 0.85em;
+      white-space: nowrap;
+    }
+    #map { height: 400px; }
+    #charts { display: flex; gap: 1em; padding: 1em; }
+    .chart-container { flex: 1; }
+  </style>
+</head>
+<body>
+
+  <div id="controls">
+    <input type="file" id="fileInput" multiple accept=".txt"/>
+    <button id="loadBtn">Load Data</button>
+    <span id="zoneSelector" style="display:none; margin-left:1em;">
+      Zone:
+      <select id="zoneSelect">
+        <option value="DH">Downhill (DH)</option>
+        <option value="MU">Middle (MU)</option>
+        <option value="UH">Uphill (UH)</option>
+      </select>
+    </span>
+    <div id="status">Status: waiting for upload…</div>
+  </div>
+
+  <!-- NEW: Data table container -->
+  <div id="dataTable"></div>
+
+  <div id="map"></div>
+
+  <div id="charts">
+    <div class="chart-container">
+      <canvas id="waterChart"></canvas>
+    </div>
+  </div>
+
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@2.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
