@@ -147,14 +147,14 @@ function initChart() {
     type: 'line',
     data: { datasets: [] },
     options: {
-      
+      responsive: false,
+      maintainAspectRatio: true, // Remove or comment this out
       scales: {
         x: { type: 'time', time: { tooltipFormat: 'yyyy-MM-dd HH:mm' } },
         y: { title: { display: true, text: '' } }
       },
       plugins: {
-        title: { display: true, text: '' },
-        
+        title: { display: true, text: '' }
       }
     }
   });
