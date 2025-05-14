@@ -147,17 +147,14 @@ function initChart() {
     type: 'line',
     data: { datasets: [] },
     options: {
-      parsing: false,
+      
       scales: {
         x: { type: 'time', time: { tooltipFormat: 'yyyy-MM-dd HH:mm' } },
         y: { title: { display: true, text: '' } }
       },
       plugins: {
         title: { display: true, text: '' },
-        zoom: {
-          pan:  { enabled: true, mode: 'x' },
-          zoom: { wheel: { enabled: true }, pinch: { enabled: true }, mode: 'x' }
-        }
+        
       }
     }
   });
