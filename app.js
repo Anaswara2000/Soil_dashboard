@@ -162,36 +162,54 @@ function initChart() {
 
 // 4) Build & render datasets
 function updatePlot() {
-  const start = new Date(document.getElementById('startDate').value);
-  const end   = new Date(document.getElementById('endDate').value);
-  const param = document.getElementById('paramSelect').value;
+  const start  = new Date(document.getElementById('startDate').value);
+  const end    = new Date(document.getElementById('endDate').value);
+  const param  = document.getElementById('paramSelect').value;
   const paramLabel = document.querySelector('#paramSelect option:checked').text;
-  const sensors = Array.from(document.getElementById('sensorSelect').selectedOptions)
-                       .map(o => o.value);
-  if (!sensors.length) return alert('Select at least one sensor.');
+  const sensors = Array.from(
+    document.getElementById('sensorSelect').selectedOptions
+  ).map(o => o.value);
 
+  if (!sensors.length) {
+    return alert('Select at least one sensor.');
+  }
+
+  // 1) Filter rows by date range
+  const filtered = dataRows.filter(r => {
+    // ensure ‘T’ if your datetime is "YYYY-MM-DD hh:mm:ss"
+    const raw = (typeof r.datetime === 'string' && r.datetime.includes(' '))
+                ? r.datetime.replace(' ', 'T')
+                : r.datetime;
+    const dt  = new Date(raw);
+    return dt >= start && dt <= end;
+  });
+
+  // 2) Build one dataset per sensor from only the filtered rows
   const datasets = sensors.map(id => ({
     label: sensorIdToLabel[id],
-    data: dataRows.map(r => {
-      const dt = new Date(r.datetime);
-      if (dt < start || dt > end) return null;
-      const y = r[`${id}_${param}`];
-      return { x: dt, y: (y==null||y==='') ? null : y };
+    data: filtered.map(r => {
+      const dt = new Date(r.datetime.replace(' ', 'T'));
+      const y  = r[`${id}_${param}`];
+      return { x: dt, y: (y == null || y === '') ? null : y };
     }),
     spanGaps: false,
     fill: false
   }));
 
-  mainChart.data.datasets = datasets;
+  // 3) Update chart labels & data
+  mainChart.data.datasets             = datasets;
   mainChart.options.plugins.title.text = paramLabel;
-  mainChart.options.scales.y.title.text  = paramLabel;
+  mainChart.options.scales.y.title.text = paramLabel;
   mainChart.update();
 }
+
 
 // 5) Download CSV of the filtered series
 function downloadFilteredData() {
   const start = new Date(document.getElementById('startDate').value);
-  const end   = new Date(document.getElementById('endDate').value);
+  let end = new Date(document.getElementById('endDate').value);
+  // Set end to end of day
+  end.setHours(23, 59, 59, 999);
   const param = document.getElementById('paramSelect').value;
   const sensors = Array.from(document.getElementById('sensorSelect').selectedOptions)
                        .map(o => o.value);
